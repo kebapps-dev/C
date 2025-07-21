@@ -274,7 +274,7 @@ function showSizingSuggestions(application) {
 
 
 //needs to be scalable to other applications
-window.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
     // List all relevant input IDs for Generic Rotary
     const rotaryInputs = [
         "genericRequiredSpeed",
