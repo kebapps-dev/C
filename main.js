@@ -1,122 +1,95 @@
 document.addEventListener("DOMContentLoaded", function() {
-  document.getElementById("application").value = "Genericrotary";
     // FAST MODE
-    handleAppChange(); 
-    setTimeout(() => {document.getElementById('loadGenericData').click();}, 100);
-    setTimeout(() => {document.getElementById('findClosestGenericRotaryMotor').click();}, 300);
-    showSizingSuggestions(document.getElementById("application").value);
-  document.getElementById("application").addEventListener("change", handleAppChange);
-
-  const toggle = document.getElementById("toggleRight");
-  const rightPanel = document.querySelector(".right");
-  toggle.addEventListener("change", function() {
-    rightPanel.style.display = toggle.checked ? "block" : "none";
-  });
+      document.getElementById("application").value = "Genericrotary";
+      handleAppChange(); 
+      setTimeout(() => {document.getElementById('loadGenericData').click();}, 100);
+      setTimeout(() => {document.getElementById('findClosestGenericRotaryMotor').click();}, 300);
+      showSizingSuggestions(document.getElementById("application").value);
 });
 
-function handleAppChange() {
-  console.log("Application changed, updating input groups...");
-  const app = document.getElementById("application").value;
-  const pumpDiv = document.getElementById("pumpInputs");
-  const liftDiv = document.getElementById("liftInputs");
-  const rotaryTableDiv = document.getElementById("rotaryTableInputs");
-  const conveyorDiv = document.getElementById("conveyorInputs");
-  const genericRotaryDiv = document.getElementById("genericRotaryInputs");
-  const blowerDiv = document.getElementById("blowerInputs");
-  const spindleDiv = document.getElementById("spindleInputs");
-  const resultsDiv = document.getElementById("results");
-  const resultsDiv2 = document.getElementById("results2");
-  const savedConfigBtn = document.getElementById("saveConfigBtn");
-  const clearSavedConfigsBtn = document.getElementById("clearSavedConfigsBtn");
-  resultsDiv.innerHTML = ""; // clear previous results
-  resultsDiv2.innerHTML = ""; // clear previous results
+// Example usage: call this when application changes
+document.getElementById("application").addEventListener("change", function(e) {
+    showSizingSuggestions(e.target.value);
+});
 
-  if (app === "Pump") {
-    pumpDiv.style.display = "block";
-    liftDiv.style.display = "none";
-    rotaryTableDiv.style.display = "none";
-    conveyorDiv.style.display = "none";
-    genericRotaryDiv.style.display = "none";
-    blowerDiv.style.display = "none";
-    spindleDiv.style.display = "none";
-    clearSavedConfigsBtn.style.display = "inline-block";
-    savedConfigBtn.style.display = "inline-block";
-  } else if (app === "Lift") {
-    pumpDiv.style.display = "none";
-    liftDiv.style.display = "block";
-    rotaryTableDiv.style.display = "none";
-    conveyorDiv.style.display = "none";
-    genericRotaryDiv.style.display = "none";
-    blowerDiv.style.display = "none";
-    spindleDiv.style.display = "none";
-    clearSavedConfigsBtn.style.display = "inline-block";
-    savedConfigBtn.style.display = "inline-block";
-  } else if (app === "Rotarytable") {
-    pumpDiv.style.display = "none";
-    liftDiv.style.display = "none";
-    rotaryTableDiv.style.display = "block";
-    conveyorDiv.style.display = "none";
-    genericRotaryDiv.style.display = "none";
-    blowerDiv.style.display = "none";
-    spindleDiv.style.display = "none";
-    clearSavedConfigsBtn.style.display = "inline-block";
-    savedConfigBtn.style.display = "inline-block";
-  } else if (app === "Conveyor") {
-    pumpDiv.style.display = "none";
-    liftDiv.style.display = "none";
-    rotaryTableDiv.style.display = "none";
-    conveyorDiv.style.display = "block";
-    genericRotaryDiv.style.display = "none";
-    blowerDiv.style.display = "none";
-    spindleDiv.style.display = "none";
-    clearSavedConfigsBtn.style.display = "inline-block";
-    savedConfigBtn.style.display = "inline-block";
-  }  else if (app === "Genericrotary") {
-    pumpDiv.style.display = "none";
-    liftDiv.style.display = "none";
-    rotaryTableDiv.style.display = "none";
-    conveyorDiv.style.display = "none";
-    genericRotaryDiv.style.display = "block";
-    blowerDiv.style.display = "none";
-    spindleDiv.style.display = "none";
-    clearSavedConfigsBtn.style.display = "inline-block";
-    savedConfigBtn.style.display = "inline-block";
-  } else if (app === "Blower") {
-    pumpDiv.style.display = "none";
-    liftDiv.style.display = "none";
-    rotaryTableDiv.style.display = "none";
-    conveyorDiv.style.display = "none";
-    genericRotaryDiv.style.display = "none";
-    blowerDiv.style.display = "block";
-    spindleDiv.style.display = "none";
-    clearSavedConfigsBtn.style.display = "inline-block";
-    savedConfigBtn.style.display = "inline-block";
-  } else if (app === "Spindle") {
-    pumpDiv.style.display = "none";
-    liftDiv.style.display = "none";
-    rotaryTableDiv.style.display = "none";
-    conveyorDiv.style.display = "none";
-    genericRotaryDiv.style.display = "none";
-    blowerDiv.style.display = "none";
-    spindleDiv.style.display = "block";
-    clearSavedConfigsBtn.style.display = "inline-block";
-    savedConfigBtn.style.display = "inline-block";
-  }else{
-    pumpDiv.style.display = "none";
-    liftDiv.style.display = "none";
-    rotaryTableDiv.style.display = "none";
-    conveyorDiv.style.display = "none";
-    genericRotaryDiv.style.display = "none";
-    blowerDiv.style.display = "none";
-    spindleDiv.style.display = "none";
-    savedConfigBtn.style.display = "none";
-    clearSavedConfigsBtn.style.display = "none";
-    savedConfigBtn.style.display = "none";
+//---Handle Application Defaults
+  let appDefaults = {};
+
+  function parseDefaultsCSV(text) {
+      const lines = text.trim().split('\n');
+      const result = {};
+      for (let i = 1; i < lines.length; i++) { // skip header
+          // Split and trim each value to remove \r and spaces
+          const [app, id, value] = lines[i].split(',').map(s => s.trim());
+          if (!result[app]) result[app] = {};
+          result[app][id] = value;
+      }
+      return result;
   }
+
+  // Fetch and parse the CSV on page load
+  fetch('csv/defaults.csv')
+      .then(res => res.text())
+      .then(text => {
+          appDefaults = parseDefaultsCSV(text);
+      })
+      .catch(err => {
+          console.error("Could not load defaults.csv:", err);
+      });
+
+  function loadGenericData(Application) {
+    if (!appDefaults[Application]) {
+        console.warn("No defaults found for application:", Application);
+        return;
+    }
+    Object.entries(appDefaults[Application]).forEach(([id, value]) => {
+        const el = document.getElementById(id);
+        if (el) el.value = value;
+    });
+    console.log("Generic data loaded for:", Application);
+}
+//---End Application Defaults
+
+
+function handleAppChange() {
+    console.log("Application changed, updating input groups...");
+    const app = document.getElementById("application").value;
+
+    // Map application names to their input div IDs
+    const appDivMap = {
+        Pump: "pumpInputs",
+        Lift: "liftInputs",
+        Rotarytable: "rotaryTableInputs",
+        Conveyor: "conveyorInputs",
+        Genericrotary: "genericRotaryInputs",
+        Blower: "blowerInputs",
+        Spindle: "spindleInputs"
+    };
+
+    // Hide all input groups first
+    Object.values(appDivMap).forEach(id => {
+        const div = document.getElementById(id);
+        if (div) div.style.display = "none";
+    });
+
+    // Show the selected application's input group if it exists
+    if (appDivMap[app]) {
+        const div = document.getElementById(appDivMap[app]);
+        if (div) div.style.display = "block";
+    }
+
+    // Show/hide Save and Clear buttons based on app selection
+    const savedConfigBtn = document.getElementById("saveConfigBtn");
+    const clearSavedConfigsBtn = document.getElementById("clearSavedConfigsBtn");
+    const showButtons = !!appDivMap[app];
+    savedConfigBtn.style.display = showButtons ? "inline-block" : "none";
+    clearSavedConfigsBtn.style.display = showButtons ? "inline-block" : "none";
+
+    // Clear results
+    document.getElementById("results").innerHTML = "";
+    document.getElementById("results2").innerHTML = "";
+
     loadSelectedScript();
-    
-    // Show or hide the Save Configuration button
-    document.getElementById("saveConfigBtn").style.display = app ? "block" : "none";
 }
 
 function loadSelectedScript() {
@@ -140,65 +113,7 @@ function loadSelectedScript() {
       document.body.appendChild(script);
     }
 
-function loadGenericData(Application) {
-    if (Application === "Pump") {
-      document.getElementById("boreDiameter").value = "3.25";  
-      document.getElementById("rodDiameter").value = "2";   
-      document.getElementById("strokeLength").value = "8"; 
-      document.getElementById("clampPressure").value = "181.1";  
-      document.getElementById("timeOfStroke").value = "1.8";    
-      document.getElementById("clampFlowRate").value = "25.7";           
-      document.getElementById("rpm").value = "2300";  
-      document.getElementById("motorEfficiency").value = "90";  
-      document.getElementById("safetyFactor").value = "1.1";
-    }
-    if (Application === "Lift") {
-      document.getElementById("loadWeight").value = "1000";  
-      document.getElementById("liftHeight").value = "150";  
-      document.getElementById("maxSpeed").value = "1";  
-      document.getElementById("gearboxRatioLift").value = "50";
-      document.getElementById("accelDecelTime").value = "2";  
-      document.getElementById("drumDiameter").value = "110";  
-    }
-    if (Application === "Rotarytable") {
-      document.getElementById("rotationalMoveDistance").value = "3.14"; 
-      document.getElementById("totalMoveTime").value = "10";  
-      document.getElementById("dwellTime").value = "2";  
-      document.getElementById("accelTime").value = "2";  
-      document.getElementById("decelTime").value = "2";  
-      document.getElementById("massIndexTable").value = "50";  
-      document.getElementById("radiusIndexTable").value = "0.5";  
-      document.getElementById("gearboxRatioRotary").value = "10";
-      document.getElementById("loadInertia").value = "0.1";  
-      document.getElementById("frictionTorque").value = "0.5";
-    }
-    if (Application === "Conveyor") {
-      document.getElementById("conveyorLength").value = "10";
-      document.getElementById("conveyorInclineAngle").value = "30";
-      document.getElementById("beltSpeed").value = "0.5";
-      document.getElementById("loadMass").value = "200";
-      document.getElementById("rollerDiameter").value = ".2";
-      document.getElementById("frictionCoefficient").value = ".03";
-    }
-    if (Application === "Genericrotary") {
-      document.getElementById("genericRequiredSpeed").value = "1000";  
-      document.getElementById("genericAccelTime").value = "2";
-      document.getElementById("genericRunTime").value = "4";
-      document.getElementById("genericDecelTime").value = "2";
-      document.getElementById("genericRestTime").value = "2";
-      document.getElementById("genericMomentOfInertia").value = "25";
-      document.getElementById("genericFrictionTorque").value = "25";
-      document.getElementById("genericThermalMarginPercent").value = "20"; // 20% thermal margin
-    }
-    if (Application === "Blower") {
-      document.getElementById("blowerAirflow").value = "3000";
-      document.getElementById("blowerPressure").value = "4";
-      document.getElementById("blowerFanEff").value = "65";
-      document.getElementById("blowerMotorEff").value = "90";
-      document.getElementById("blowerRequiredSpeed").value = "1800";
-    }
-      console.log("Generic data loaded for:", Application);
-}
+
 
 function saveCurrentConfiguration() {
     // Get selected application
@@ -299,52 +214,7 @@ function showDoneMessage() {
     }, 1000); // Message disappears after 1 second
 }
 
-window.addEventListener('DOMContentLoaded', () => {
-    // List all relevant input IDs for Generic Rotary
-    const rotaryInputs = [
-        "genericRequiredSpeed",
-        "genericSpeedUnit",
-        "genericAccelTime",
-        "genericRunTime",
-        "genericDecelTime",
-        "genericRestTime",
-        "genericMomentOfInertia",
-        "genericInertiaUnit",
-        "genericFrictionTorque",
-        "genericTorqueUnit",
-        "genericThermalMarginPercent"
-    ];
 
-    rotaryInputs.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-            // Only update on 'change' (for selects) or 'blur' (for inputs), or Enter key
-            if (el.tagName === "SELECT") {
-                el.addEventListener('change', () => {
-                    const app = document.getElementById("application");
-                    if (app && app.value === "Genericrotary") {
-                        findClosestGenericRotaryMotor();
-                    }
-                });
-            } else {
-                el.addEventListener('blur', () => {
-                    const app = document.getElementById("application");
-                    if (app && app.value === "Genericrotary") {
-                        findClosestGenericRotaryMotor();
-                    }
-                });
-                el.addEventListener('keydown', (e) => {
-                    if (e.key === "Enter") {
-                        const app = document.getElementById("application");
-                        if (app && app.value === "Genericrotary") {
-                            findClosestGenericRotaryMotor();
-                        }
-                    }
-                });
-            }
-        }
-    });
-});
 
 function showSizingSuggestions(application) {
     const howToSizeDiv = document.getElementById("howToSize");
@@ -399,10 +269,7 @@ function showSizingSuggestions(application) {
     howToSizeDiv.innerHTML = html;
 }
 
-// Example usage: call this when application changes
-document.getElementById("application").addEventListener("change", function(e) {
-    showSizingSuggestions(e.target.value);
-});
+
 
 
 

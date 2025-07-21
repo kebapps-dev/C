@@ -58,29 +58,6 @@ function displayGenericRotaryResults(currentOutputs) {
     let idx = 0;
     let waitingForStartingValuePresent = false; // Track if any row is waiting
 
-    // Helper for color gradient: green for positive, red for negative, black for zero
-    function getDynamicColor(percentChange, increased) {
-        // percentChange: 0.01 (1%) to 1 (100%) for green, -0.01 (-1%) to -1 (-100%) for red
-        if (percentChange > 0) {
-            // Green gradient from dull (#88cc88) to bold (#00c800)
-            const t = Math.min(percentChange, 1);
-            const r = Math.round(136 * (1 - t)); // 136 -> 0
-            const g = Math.round(204 * (1 - t) + 200 * t); // 204 -> 200
-            const b = Math.round(136 * (1 - t)); // 136 -> 0
-            return `rgb(${r},${g},${b})`;
-        } else if (percentChange < 0) {
-            // Red gradient from dull (#cc8888) to bold (#c80000)
-            const t = Math.min(-percentChange, 1);
-            const r = Math.round(204 * (1 - t) + 200 * t); // 204 -> 200
-            const g = Math.round(136 * (1 - t)); // 136 -> 0
-            const b = Math.round(136 * (1 - t)); // 136 -> 0
-            return `rgb(${r},${g},${b})`;
-        } else {
-            // Black for starting value
-            return "#222";
-        }
-    }
-
     // Helper for color gradient for segment circle: 
     // 1% to 100% positive = green gradient (dull to bold)
     // -1% to -100% negative = red gradient (dull to bold)
@@ -111,21 +88,9 @@ function displayGenericRotaryResults(currentOutputs) {
         const prevRaw = previousGenericRotaryOutputs[key];
         const prev = prevRaw !== undefined ? parseFloat(String(prevRaw).replace(/[^0-9.\-]/g, '')) : undefined;
 
-        let color = "#222";
-        if (
-            prev !== undefined &&
-            !isNaN(numericValue) &&
-            !isNaN(prev) &&
-            prev !== 0
-        ) {
-            const change = Math.abs(numericValue - prev) / Math.abs(prev);
-            const increased = numericValue > prev;
-            color = getDynamicColor(change, increased);
-        }
-
         // Draw line segment if startingValues are set
         let segmentHtml = "";
-        let statusHtml = "";
+        let statusHtml = "None"; // Default value is "None"
         let adjustmentHtml = "";
         if (
             showSegments &&
@@ -169,12 +134,10 @@ function displayGenericRotaryResults(currentOutputs) {
             // Status column logic
             if (percentChange > 1 || percentChange < -1) {
                 statusHtml = `<span style="color:#c80000;font-weight:bold;">Results out of scope. Change starting values.</span>`;
-            } else {
-                statusHtml = "";
             }
         } else {
             adjustmentHtml = `<span style="color:#888;">Waiting for starting value</span>`;
-            statusHtml = "";
+            statusHtml = `<span style="color:#888;">None</span>`;
             waitingForStartingValuePresent = true;
         }
 
@@ -307,3 +270,51 @@ function sizeGenericRotaryMotor(params) {
       contPowerHPWithMargin: (contPowerWithMargin / 745.7).toFixed(2) + ' HP'
     };
 }
+
+//needs to be scalable to other applications
+window.addEventListener('DOMContentLoaded', () => {
+    // List all relevant input IDs for Generic Rotary
+    const rotaryInputs = [
+        "genericRequiredSpeed",
+        "genericSpeedUnit",
+        "genericAccelTime",
+        "genericRunTime",
+        "genericDecelTime",
+        "genericRestTime",
+        "genericMomentOfInertia",
+        "genericInertiaUnit",
+        "genericFrictionTorque",
+        "genericTorqueUnit",
+        "genericThermalMarginPercent"
+    ];
+
+    rotaryInputs.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+            // Only update on 'change' (for selects) or 'blur' (for inputs), or Enter key
+            if (el.tagName === "SELECT") {
+                el.addEventListener('change', () => {
+                    const app = document.getElementById("application");
+                    if (app && app.value === "Genericrotary") {
+                        findClosestGenericRotaryMotor();
+                    }
+                });
+            } else {
+                el.addEventListener('blur', () => {
+                    const app = document.getElementById("application");
+                    if (app && app.value === "Genericrotary") {
+                        findClosestGenericRotaryMotor();
+                    }
+                });
+                el.addEventListener('keydown', (e) => {
+                    if (e.key === "Enter") {
+                        const app = document.getElementById("application");
+                        if (app && app.value === "Genericrotary") {
+                            findClosestGenericRotaryMotor();
+                        }
+                    }
+                });
+            }
+        }
+    });
+});

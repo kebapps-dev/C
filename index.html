@@ -195,6 +195,8 @@
         <!-- Generic Rotary Inputs -->
         <div id="genericRotaryInputs" style="display:none" class="input-group">
           <button id="loadGenericData" onclick="loadGenericData('Genericrotary')">Load Generic Data</button><br>
+          
+          <h4 style="margin-bottom:4px;margin-top:10px;">Cycle Timing & Speed</h4>
           <div>
             <label for="genericRequiredSpeed" title="The target speed for the rotary axis.">Required Speed:</label>
             <input type="number" id="genericRequiredSpeed" step="any" title="Enter the desired speed for the rotary axis."/>
@@ -224,7 +226,10 @@
             <label for="genericRestTime" title="Time the rotary axis is at rest between cycles.">Rest Time:</label>
             <input type="number" id="genericRestTime" step="any" title="Enter the time (in seconds) for rest between cycles."/>
             <span>s</span>
-          </div><br>
+          </div>
+          <br>
+
+          <h4 style="margin-bottom:4px;margin-top:10px;">Load & Margin</h4>
           <div>
             <label for="genericMomentOfInertia" title="Rotational inertia of the load and mechanism.">Moment of Inertia:</label>
             <input type="number" id="genericMomentOfInertia" step="any" title="Enter the moment of inertia for the system."/>
@@ -250,9 +255,10 @@
             <label for="genericThermalMarginPercent" title="Extra margin to account for thermal effects.">Thermal Margin:</label>
             <input type="number" id="genericThermalMarginPercent" step="any" title="Enter the thermal margin as a percentage."/>
             <span>%</span>
-          </div><br>
+          </div>
+          <br>
           <button id="findClosestGenericRotaryMotor" onclick="findClosestGenericRotaryMotor(); showDoneMessage()">Find Closest Rotary Table Motor</button>
-          <span id="doneMessage" style="margin-left:10px; display:none;">Done</span>
+          <span id="doneMessage" style="margin-left:10px; display:none;">Done</span><br><br>
           <button id="genericLockStartingValues" onclick="lockStartingValues()">Lock Starting Values</button>
         </div>
         <!-- Blower Inputs -->
