@@ -185,7 +185,7 @@ function findClosestGenericRotaryMotor() {
     let hasEmpty = false;
     for (const id of inputIds) {
         const el = document.getElementById(id);
-        if (el && (el.value === "" || el.value === null)) {
+        if (!el || el.value === "" || el.value === null) {
             hasEmpty = true;
             break;
         }
@@ -196,15 +196,33 @@ function findClosestGenericRotaryMotor() {
     }
 
     const resultsDiv = document.getElementById("results");
+    
+    // Check if all required elements exist before proceeding
+    const requiredElements = [
+        "genericMomentOfInertia", 
+        "genericRequiredSpeed", 
+        "genericAccelTime", "genericRunTime", "genericDecelTime", "genericRestTime",
+        "genericFrictionTorque", 
+        "genericThermalMarginPercent"
+    ];
+    
+    for (const id of requiredElements) {
+        const el = document.getElementById(id);
+        if (!el) {
+            console.warn(`Required element ${id} not found in DOM`);
+            return;
+        }
+    }
+    
     const rmsresults = sizeGenericRotaryMotor(
         {
-            inertia : getConvertedValue(parseFloat(document.getElementById("genericMomentOfInertia").value),"inertia",document.getElementById("genericInertiaUnit").value), // kg·m²
-            targetRPM : getConvertedValue(parseFloat(document.getElementById("genericRequiredSpeed").value),"speed",document.getElementById("genericSpeedUnit").value), // RPM
+            inertia : getValueWithUnit("genericMomentOfInertia"), // kg·m²
+            targetRPM : getValueWithUnit("genericRequiredSpeed"), // This returns rad/s
             accelTime : parseFloat(document.getElementById("genericAccelTime").value), // s
             runTime : parseFloat(document.getElementById("genericRunTime").value), // s
             decelTime : parseFloat(document.getElementById("genericDecelTime").value), // s
             restTime : parseFloat(document.getElementById("genericRestTime").value), // s
-            frictionTorque : getConvertedValue(parseFloat(document.getElementById("genericFrictionTorque").value),"torque",document.getElementById("genericTorqueUnit").value), // Nm
+            frictionTorque : getValueWithUnit("genericFrictionTorque"), // Nm
             thermalMarginPercent : parseFloat(document.getElementById("genericThermalMarginPercent").value) // e.g., 20 = 20%
         }
     );
@@ -221,7 +239,7 @@ function findClosestGenericRotaryMotor() {
 function sizeGenericRotaryMotor(params) {
     const {
       inertia,              // kg·m²
-      targetRPM,            // RPM
+      targetRPM,            // This is actually rad/s from the conversion
       accelTime,            // s
       runTime,              // s
       decelTime,            // s
@@ -233,8 +251,8 @@ function sizeGenericRotaryMotor(params) {
     const totalCycleTime = accelTime + runTime + decelTime + restTime;
     const g = 9.81;
 
-    // Convert target RPM to rad/s
-    const omega = (2 * Math.PI * targetRPM) / 60;
+    // targetRPM is already in rad/s from the conversion
+    const omega = targetRPM;
     // <span class="math-tooltip">ⓘ<span class="math-tooltiptext">\( \omega = 2\pi \cdot \frac{\text{RPM}}{60} \)<br>Where:<br>\(\omega\) = angular velocity (rad/s)<br>RPM = revolutions per minute</span></span>
 
     // Acceleration torque = J * α = J * ω / t

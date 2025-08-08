@@ -75,6 +75,27 @@ const rotarytableformulas = {
     requiredMotorPowerHp : (torque, angularSpeed) => (torque * angularSpeed) / 745.7, // hp
   };
 
+  const blowerformulas = {
+    // Convert CFM to m³/s
+    airflowCFMToM3S: (airflowCFM) => airflowCFM * 0.0004719, // m³/s
+    // Convert inH2O to Pa
+    pressureInH2OToPa: (pressureInH2O) => pressureInH2O * 249.1, // Pa
+    // Calculate fan power
+    fanPower: (airflow, pressure, fanEfficiency) => (airflow * pressure) / (fanEfficiency / 100), // W
+    // Calculate motor power
+    motorPower: (fanPower, motorEfficiency) => fanPower / (motorEfficiency / 100), // W
+    // Convert motor power to HP
+    motorPowerHP: (motorPowerWatts) => motorPowerWatts / 745.7, // HP
+    // Calculate torque from motor power and RPM
+    blowerTorque: (motorPowerWatts, rpm) => {
+      if (rpm && rpm > 0) {
+        const omega = (2 * Math.PI * rpm) / 60; // rad/s
+        return motorPowerWatts / omega; // Nm
+      }
+      return 0;
+    }
+  };
+
   
 
 

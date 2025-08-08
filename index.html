@@ -35,7 +35,7 @@
 
     .container {
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       gap: 10px; /* Space between rows */
     }
 
@@ -46,14 +46,14 @@
     }
 
     .left {
-      flex: 2;                 /* Take more space */
+      flex: 1;                 /* Take more space */
       padding: 10px;
       background: #d8d8d8b2;
     }
 
     .right {
       display: block;
-      flex: 3;                 /* Take less space */
+      flex: 1;                 /* Take less space */
       padding: 10px;
       background: #e9e9e9;
       margin-left: 0px;       /* Space between columns */
@@ -79,6 +79,26 @@
       border: 1px solid #000000;
       padding: 4px;
     }
+    
+    /* Unit dropdown styling */
+    select[id$="Unit"] {
+      margin-left: 4px;
+      padding: 2px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      background-color: #f9f9f9;
+      font-size: 0.9em;
+    }
+    
+    select[id$="Unit"]:focus {
+      border-color: #007acc;
+      background-color: #fff;
+    }
+    
+    /* Hide formulas container when no application selected */
+    #formulasContainer:empty {
+      display: none;
+    }
       </style>
 
 </head>
@@ -88,224 +108,54 @@
   <div class="input-group" style="display: flex; align-items: center; gap: 10px;">
     <label for="application" style="width: auto;">Select Application:</label>
     <select id="application">
-      <option value="">-- Choose Application --</option>
+      <option value="ChooseApplication">-- Choose Application --</option>
       <option value="Pump">Pump</option>
       <option value="Lift">Lift</option>
       <option value="Rotarytable">Rotary Table</option>
       <option value="Conveyor">Conveyor</option>
       <option value="Genericrotary">Generic Rotary</option>
       <option value="Blower">Blower</option>
+      <!-- <option value="MaterialHandling">Generic Linear</option>
+      <option value="Testsystems">Generic Linear</option>
+      <option value="Specialmachinery">Generic Linear</option>
+      <option value="Woodworking">Generic Linear</option>
+      <option value="Machining">Generic Linear</option> -->
+      
     </select>
     <button id="clearSavedConfigsBtn" onclick="clearSavedConfigurations()" style="display:none">Clear Saved Configurations</button>
   </div>
-
+<div class="top-row">
+    </div>
   <div class = "container">
-    <div class="top-row">
-      <div class="left">
-        <!-- Pump inputs -->
-        <div id="pumpInputs" style="display:none" class="input-group">
-          <button onclick="loadGenericData('Pump')">Load Generic Data</button><br/><br/>
-          <label for="boreDiameter">Bore Diameter (in):</label>
-          <input type="number" id="boreDiameter" step="any"/><br/>
-          <label for="rodDiameter">Bore Diameter (in):</label>
-          <input type="number" id="rodDiameter" step="any"/><br/>
-          <label for="strokeLength">Stroke Length (in):</label>
-          <input type="number" id="strokeLength" step="any"/><br/><br/>
 
-          <label for="clampPressure">Clamp Pressure (bar):</label>
-          <input type="number" id="clampPressure" step="any"/><br/>
-          <label for="timeOfStroke">Clamping Time of Stroke (s):</label>
-          <input type="number" id="timeOfStroke" step="any"/><br/>
-          <label for="clampFlowRate">Clamp Flow Rate (l/min):</label>
-          <input type="number" id="clampFlowRate" step="any"/><br/><br/>
+    
 
-          <label for="rpm">Pump Speed (RPM):</label>
-          <input type="number" id="rpm" step="any"/><br/>
-          <label for="motorEfficiency">Motor Efficiency (xx%):</label>
-          <input type="number" id="motorEfficiency" step="any"/><br/><br/>
-          
-          <label for="safetyFactor">Safety Factor (x.x):</label>
-          <input type="number" id="safetyFactor" step="any"/><br/><br/>
 
-          <button onclick="findClosestPumpMotor()">Find Closest Pump</button><br/>
-        </div>
-        <!-- Lift inputs -->
-        <div id="liftInputs" style="display:none" class="input-group">
-          <button onclick="loadGenericData('Lift')">Load Generic Data</button><br/><br/>
-          <label for="loadWeight">Load Weight (kg):</label>
-          <input type="number" id="loadWeight" step="any"/><br/>
-          <label for="liftHeight">Lift Height (m):</label>
-          <input type="number" id="liftHeight" step="any"/><br/>
-          <label for="maxSpeed">Max Speed (m/s):</label>
-          <input type="number" id="maxSpeed" step="any"/><br/>
-          <label for="gearboxRatioLift">Gearbox Ratio:</label>
-          <input type="number" id="gearboxRatioLift" step="any"/><br/>
-          <label for="accelDecelTime">Accel/Decel Time (s):</label>
-          <input type="number" id="accelDecelTime" step="any"/><br/>
-          <label for="drumDiameter">Drum Diameter (mm):</label>
-          <input type="number" id="drumDiameter" step="any"/><br/><br/>
-
-          <button onclick="findClosestLiftMotor()">Find Closest Lift Motor</button><br/>
-        </div>
-        <!-- Rotary Table inputs -->
-        <div id="rotaryTableInputs" style="display:none" class="input-group">
-          <button onclick="loadGenericData('Rotarytable')">Load Generic Data</button><br/><br/>
-          <label for="rotationalMoveDistance">Rotational Move Distance (radians):</label>
-          <input type="number" id="rotationalMoveDistance" step="any"/><br/>
-          <label for="totalMoveTime">Total Move Time (s):</label>
-          <input type="number" id="totalMoveTime" step="any"/><br/>
-          <label for="dwellTime">Dwell Time (s):</label>
-          <input type="number" id="dwellTime" step="any"/><br/>
-          <label for="accelTime">Acceleration Time (s):</label>
-          <input type="number" id="accelTime" step="any"/><br/>
-          <label for="decelTime">Deceleration Time (s):</label>
-          <input type="number" id="decelTime" step="any"/><br/><br/>
-
-          <label for="massIndexTable">Mass of Index Table (kg):</label>
-          <input type="number" id="massIndexTable" step="any"/><br/>
-          <label for="radiusIndexTable">Radius of Index Table (in):</label>
-          <input type="number" id="radiusIndexTable" step="any"/><br/>
-          <label for="loadInertia">Load Inertia (x):</label>
-          <input type="number" id="loadInertia" step="any"/><br/>
-          <label for="gearboxRatioRotary">Gearbox Ratio:</label>
-          <input type="number" id="gearboxRatioRotary" step="any"/><br/>
-          <label for="frictionTorque">Constant Friction Torque (Nm):</label>
-          <input type="number" id="frictionTorque" step="any"/><br/><br/>
-
-          <button onclick="findClosestRotaryTableMotor()">Find Closest Rotary Table Motor</button><br/>
-        </div>
-        <!-- Conveyor Inputs -->
-        <div id="conveyorInputs" style="display:none" class="input-group">
-          <button onclick="loadGenericData('Conveyor')">Load Generic Data</button><br/><br/>
-          <label for="conveyorLength">Conveyor Length (m):</label>
-          <input type="number" id="conveyorLength" step="any"/><br/>
-          <label for="conveyorInclineAngle">Incline Angle (degrees, 0 for horizontal):</label>
-          <input type="number" id="conveyorInclineAngle" step="any"/><br/>
-          <label for="beltSpeed">Belt Speed (m/s):</label>
-          <input type="number" id="beltSpeed" step="any"/><br/>
-          <label for="loadMass">Load Mass (kg):</label>
-          <input type="number" id="loadMass" step="any"/><br/>
-          <label for="rollerDiameter">Roller Diameter (m):</label>
-          <input type="number" id="rollerDiameter" step="any"/><br/>
-          <label for="frictionCoefficient">Friction Coefficient (u):</label>
-          <input type="number" id="frictionCoefficient" step="any"/><br/><br/>
-
-          <button onclick="findClosestConveyorMotor()">Find Closest Rotary Table Motor</button><br/>
-        </div>
-        <!-- Generic Rotary Inputs -->
-        <div id="genericRotaryInputs" style="display:none" class="input-group">
-          <button id="loadGenericData" onclick="loadGenericData('Genericrotary')">Load Generic Data</button><br>
-          
-          <h4 style="margin-bottom:4px;margin-top:10px;">Cycle Timing & Speed</h4>
-          <div>
-            <label for="genericRequiredSpeed" title="The target speed for the rotary axis.">Required Speed:</label>
-            <input type="number" id="genericRequiredSpeed" step="any" title="Enter the desired speed for the rotary axis."/>
-            <select id="genericSpeedUnit" title="Select the unit for required speed.">
-              <option value="RPM">RPM</option>
-              <option value="rad/s">rad/s</option>
-              <option value="deg/s">deg/s</option>
-              <option value="Hz">Hz</option>
-            </select>
-          </div>
-          <div>
-            <label for="genericAccelTime" title="Time taken to accelerate from rest to required speed.">Acceleration Time:</label>
-            <input type="number" id="genericAccelTime" step="any" title="Enter the time (in seconds) for acceleration."/>
-            <span>s</span>
-          </div>
-          <div>
-            <label for="genericRunTime" title="Time the rotary axis runs at required speed.">Run Time:</label>
-            <input type="number" id="genericRunTime" step="any" title="Enter the time (in seconds) for running at speed."/>
-            <span>s</span>
-          </div>
-          <div>
-            <label for="genericDecelTime" title="Time taken to decelerate from required speed to rest.">Deceleration Time:</label>
-            <input type="number" id="genericDecelTime" step="any" title="Enter the time (in seconds) for deceleration."/>
-            <span>s</span>
-          </div>
-          <div>
-            <label for="genericRestTime" title="Time the rotary axis is at rest between cycles.">Rest Time:</label>
-            <input type="number" id="genericRestTime" step="any" title="Enter the time (in seconds) for rest between cycles."/>
-            <span>s</span>
-          </div>
-          <br>
-
-          <h4 style="margin-bottom:4px;margin-top:10px;">Load & Margin</h4>
-          <div>
-            <label for="genericMomentOfInertia" title="Rotational inertia of the load and mechanism.">Moment of Inertia:</label>
-            <input type="number" id="genericMomentOfInertia" step="any" title="Enter the moment of inertia for the system."/>
-            <select id="genericInertiaUnit" title="Select the unit for moment of inertia.">
-              <option value="kg·m²">kg·m²</option>
-              <option value="lb·ft²">lb·ft²</option>
-              <option value="g·cm²">g·cm²</option>
-              <option value="kg·cm²">kg·cm²</option>
-            </select>
-          </div>
-          <div>
-            <label for="genericFrictionTorque" title="Constant torque due to friction in the system.">Friction Torque:</label>
-            <input type="number" id="genericFrictionTorque" step="any" title="Enter the friction torque value."/>
-            <select id="genericTorqueUnit" title="Select the unit for friction torque.">
-              <option value="Nm">Nm</option>
-              <option value="lb·ft">lb·ft</option>
-              <option value="lb·in">lb·in</option>
-              <option value="oz·in">oz·in</option>
-              <option value="kg·cm">kg·cm</option>
-            </select>
-          </div>
-          <div>
-            <label for="genericThermalMarginPercent" title="Extra margin to account for thermal effects.">Thermal Margin:</label>
-            <input type="number" id="genericThermalMarginPercent" step="any" title="Enter the thermal margin as a percentage."/>
-            <span>%</span>
-          </div>
-          <br>
-          <button id="findClosestGenericRotaryMotor" onclick="findClosestGenericRotaryMotor(); showDoneMessage()">Find Closest Rotary Table Motor</button>
-          <span id="doneMessage" style="margin-left:10px; display:none;">Done</span><br><br>
-          <button id="genericLockStartingValues" onclick="lockStartingValues()">Lock Starting Values</button>
-        </div>
-        <!-- Blower Inputs -->
-        <div id="blowerInputs" style="display:none" class="input-group">
-          <button onclick="loadGenericData('Blower')">Load Generic Data</button><br/><br/>
-          <label for="blowerAirflow">Blower Airflow (CFM):</label>
-          <input type="number" id="blowerAirflow" step="any"/><br/>
-          <label for="blowerPressure">Blower Pressure (inH2O):</label>
-          <input type="number" id="blowerPressure" step="any"/><br/>
-          <label for="blowerFanEff">Blower Fan Efficiency (%):</label>
-          <input type="number" id="blowerFanEff" step="any"/><br/>
-          <label for="blowerMotorEff">Blower Motor Efficiency (%):</label>
-          <input type="number" id="blowerMotorEff" step="any"/><br/><br>
-          <label for="blowerRequiredSpeed">Required Speed (RPM,optional)</label>
-          <input type="number" id="blowerRequiredSpeed" step="any"/><br/><br>
-
-          <button onclick="findClosestBlowerMotor()">Find Closest Blower Motor</button><br/>
-        </div>
-        <!-- Spindle Inputs -->
-        <div id="spindleInputs" style="display:none" class="input-group">
-          <!-- <button onclick="loadGenericData('Spindle')">Load Generic Data</button><br/><br/>
-
-          <button onclick="findClosestBlowerMotor()">Find Closest Blower Motor</button><br/> -->
-        </div>
+    <div class="left">
+      <div id="dynamicInputs" class="input-group"></div>
+        <button onclick="loadGenericData(getElementById('application').value)" style="display:none">Load Generic Data</button><br/><br/>
+        <button id="calculateButton" onclick="calculateForApplication()" style="display:none">Calculate</button><br/><br/>
+        <span id="doneMessage" style="margin-left:10px; display:none;">Done</span><br><br>
+        <button id="genericLockStartingValues" onclick="lockStartingValues()" style="display:none">Lock Starting Values</button>
       </div>
+      
 
-      <div class="right">
-        <div style="margin-top:8px; font-size:1em;">
-          <span class="formula">\( \omega = 2\pi \cdot \frac{\text{RPM}}{60} \)</span>
-          <span class="formula"><b>(2)</b> \( T_{accel} = J \cdot \alpha = J \cdot \frac{\omega}{t_{accel}} \)</span>
-          <span class="formula"><b>(3)</b> \( T_{rms} = \sqrt{\frac{T_{accel}^2 t_{accel} + T_{run}^2 t_{run} + T_{decel}^2 t_{decel} + T_{rest}^2 t_{rest}}{t_{cycle}}} \)</span>
-          <span class="formula">\( P = T_{rms} \cdot \omega \)</span>
-          <span class="formula"><b>(1)</b> \( P_{margin} = P \cdot (1 + \frac{\text{margin}}{100}) \)</span>
-
-        </div>
+    <div class="right">
+      <div id="formulasContainer" style="margin-top:8px; font-size:1em;">
+        <!-- Formulas will be dynamically populated based on selected application -->
       </div>
+    </div>
     </div>
 
 
-    <div class="bottom">
-      <div id="results"></div>
-      <div id="howToSize" style=" margin-top:10px;">
-      </div>
-      <div id="results2"></div>
-      <button id="saveConfigBtn" onclick="saveCurrentConfiguration()" style="display: none">Save Configuration</button>
-      <div id="savedConfigs"></div>
+  <div class="bottom">
+    <div id="results"></div>
+    <div id="howToSize" style=" margin-top:10px;">
     </div>
+    <div id="results2"></div>
+    <button id="saveConfigBtn" onclick="saveCurrentConfiguration()" style="display: none">Save Configuration</button>
+    <div id="savedConfigs"></div>
+  </div>
 
   
 
