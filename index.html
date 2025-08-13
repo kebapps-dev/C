@@ -36,7 +36,7 @@
     .container {
       display: flex;
       flex-direction: row;
-      gap: 10px; /* Space between rows */
+      gap: 0px; /* Space between rows */
     }
 
     .top-row {
@@ -122,39 +122,26 @@
       <option value="Machining">Generic Linear</option> -->
       
     </select>
-    <button id="clearSavedConfigsBtn" onclick="clearSavedConfigurations()" style="display:none">Clear Saved Configurations</button>
   </div>
 <div class="top-row">
     </div>
   <div class = "container">
-
-    
-
-
     <div class="left">
       <div id="dynamicInputs" class="input-group"></div>
         <button onclick="loadGenericData(getElementById('application').value)" style="display:none">Load Generic Data</button><br/><br/>
-        <button id="calculateButton" onclick="calculateForApplication()" style="display:none">Calculate</button><br/><br/>
+        <button id="calculateButton" onclick="calculateForApplication()" style="display:none">Calculate</button>
         <span id="doneMessage" style="margin-left:10px; display:none;">Done</span><br><br>
-        <button id="genericLockStartingValues" onclick="lockStartingValues()" style="display:none">Lock Starting Values</button>
       </div>
-      
-
     <div class="right">
       <div id="formulasContainer" style="margin-top:8px; font-size:1em;">
         <!-- Formulas will be dynamically populated based on selected application -->
       </div>
     </div>
-    </div>
-
-
+  </div>
   <div class="bottom">
     <div id="results"></div>
-    <div id="howToSize" style=" margin-top:10px;">
-    </div>
+      <div id="howToSize" style=" margin-top:10px;"></div>
     <div id="results2"></div>
-    <button id="saveConfigBtn" onclick="saveCurrentConfiguration()" style="display: none">Save Configuration</button>
-    <div id="savedConfigs"></div>
   </div>
 
   

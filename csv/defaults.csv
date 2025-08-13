@@ -23,6 +23,9 @@ Rotarytable,massIndexTable,50
 Rotarytable,radiusIndexTable,0.5
 Rotarytable,gearboxRatioRotary,10
 Rotarytable,loadInertia,0.1
+Rotarytable,motorInertia,0
+Rotarytable,gearboxInertia,0
+Rotarytable,brakeInertia,0
 Rotarytable,frictionTorque,0.5
 Conveyor,conveyorLength,10
 Conveyor,conveyorInclineAngle,30

@@ -1,51 +1,54 @@
-Application,InputID,Label,Type,Step,Unit,Title
-Pump,boreDiameter,Bore Diameter,number,any,"in,mm,cm",Bore diameter of the cylinder
-Pump,rodDiameter,Rod Diameter,number,any,"in,mm,cm",Rod diameter of the cylinder
-Pump,strokeLength,Stroke Length,number,any,"in,mm,cm",Stroke length of the cylinder
-Pump,clampPressure,Clamp Pressure,number,any,"psi,Pa,kPa,bar",Clamp pressure for the pump
-Pump,timeOfStroke,Time of Stroke (s),number,any,s,Time for one stroke
-Pump,clampFlowRate,Clamp Flow Rate,number,any,"GPM,L/min,L/s,CFM",Flow rate for clamping
-Pump,rpm,Motor Speed,number,any,"RPM,rad/s,Hz",Motor speed
-Pump,motorEfficiency,Motor Efficiency (%),number,any,%,Motor efficiency as a percent
-Pump,safetyFactor,Safety Factor,number,any,,Safety factor for sizing
+Application,InputID,Label,Type,Step,Unit,UnitType,Title
+Pump,boreDiameter,Bore Diameter,number,any,"in,mm,cm",length,Bore diameter of the cylinder
+Pump,rodDiameter,Rod Diameter,number,any,"in,mm,cm",length,Rod diameter of the cylinder
+Pump,strokeLength,Stroke Length,number,any,"in,mm,cm",length,Stroke length of the cylinder
+Pump,clampPressure,Clamp Pressure,number,any,"bar,psi,Pa,kPa",pressure,Clamp pressure for the pump
+Pump,timeOfStroke,Time of Stroke,number,any,s,,Time for one stroke
+Pump,clampFlowRate,Clamp Flow Rate,number,any,"GPM,L/min,L/s,CFM",flow,Flow rate for clamping
+Pump,rpm,Motor Speed,number,any,"RPM,rad/s,Hz",speed,Motor speed
+Pump,motorEfficiency,Motor Efficiency,number,any,%,,Motor efficiency as a percent
+Pump,safetyFactor,Safety Factor,number,any,,,Safety factor for sizing
 
-Lift,loadWeight,Load Weight,number,any,"kg,g,lb,oz",Weight to be lifted
-Lift,liftHeight,Lift Height,number,any,"mm,m,cm,in,ft",Height to lift the load
-Lift,maxSpeed,Max Speed,number,any,"m/s,mm/s,in/s,ft/s",Maximum lifting speed
-Lift,gearboxRatioLift,Gearbox Ratio,number,any,,Gearbox ratio for lift
-Lift,accelDecelTime,Accel/Decel Time (s),number,any,s,Acceleration/Deceleration time
-Lift,drumDiameter,Drum Diameter,number,any,"mm,m,cm,in,ft",Drum diameter for lift
+Lift,loadWeight,Load Weight,number,any,"kg,g,lb,oz",mass,Weight to be lifted
+Lift,liftHeight,Lift Height,number,any,"m,mm,cm,in,ft",length,Height to lift the load
+Lift,maxSpeed,Max Speed,number,any,"m/s,mm/s,in/s,ft/s",velocity,Maximum lifting speed
+Lift,gearboxRatioLift,Gearbox Ratio,number,any,,,Gearbox ratio for lift
+Lift,accelDecelTime,Accel/Decel Time,number,any,s,,Acceleration/Deceleration time
+Lift,drumDiameter,Drum Diameter,number,any,"mm,m,cm,in,ft",length,Drum diameter for lift
 
-Rotarytable,rotationalMoveDistance,Rotational Move Distance (rad),number,any,rad,Distance to rotate
-Rotarytable,totalMoveTime,Total Move Time (s),number,any,s,Total time for move
-Rotarytable,dwellTime,Dwell Time (s),number,any,s,Time at rest after move
-Rotarytable,accelTime,Acceleration Time (s),number,any,s,Time to accelerate
-Rotarytable,decelTime,Deceleration Time (s),number,any,s,Time to decelerate
-Rotarytable,massIndexTable,Mass (kg),number,any,kg,Mass of the index table
-Rotarytable,radiusIndexTable,Radius (m),number,any,m,Radius of the index table
-Rotarytable,gearboxRatioRotary,Gearbox Ratio,number,any,,Gearbox ratio for rotary table
-Rotarytable,loadInertia,Load Inertia (kg·m²),number,any,kg·m²,Load inertia
-Rotarytable,frictionTorque,Friction Torque (Nm),number,any,Nm,Friction torque
+Rotarytable,rotationalMoveDistance,Rotational Move Distance,number,any,"rad,deg",angle,Distance to rotate
+Rotarytable,totalMoveTime,Total Move Time,number,any,s,,Total time for move
+Rotarytable,dwellTime,Dwell Time,number,any,s,,Time at rest after move
+Rotarytable,accelTime,Acceleration Time,number,any,s,,Time to accelerate
+Rotarytable,decelTime,Deceleration Time,number,any,s,,Time to decelerate
+Rotarytable,massIndexTable,Mass,number,any,"kg,g,lb,oz",mass,Mass of the index table
+Rotarytable,radiusIndexTable,Radius,number,any,"m,mm,cm,in,ft",length,Radius of the index table
+Rotarytable,gearboxRatioRotary,Gearbox Ratio,number,any,,,Gearbox ratio for rotary table
+Rotarytable,loadInertia,Load Inertia,number,any,"kg·m²,lb·ft²,g·cm²",inertia,Load inertia
+Rotarytable,motorInertia,Motor Inertia (iterative),number,any,"kg·m²,lb·ft²,g·cm²",inertia,Motor inertia
+Rotarytable,gearboxInertia,Gearbox Inertia,number,any,"kg·m²,lb·ft²,g·cm²",inertia,Gearbox inertia
+Rotarytable,brakeInertia,Brake Inertia,number,any,"kg·m²,lb·ft²,g·cm²",inertia,Brake inertia
+Rotarytable,frictionTorque,Friction Torque,number,any,"Nm,lb·ft,oz·in",torque,Friction torque
 
-Conveyor,conveyorLength,Conveyor Length,number,any,"m,mm,cm,in,ft",Length of the conveyor
-Conveyor,conveyorInclineAngle,Incline Angle (deg),number,any,deg,Incline angle of conveyor
-Conveyor,beltSpeed,Belt Speed,number,any,"m/s,mm/s,in/s,ft/s",Speed of the conveyor belt
-Conveyor,loadMass,Load Mass,number,any,"kg,g,lb,oz",Mass of the load
-Conveyor,rollerDiameter,Roller Diameter,number,any,"m,mm,cm,in,ft",Diameter of the roller
-Conveyor,frictionCoefficient,Friction Coefficient,number,any,,Coefficient of friction
+Conveyor,conveyorLength,Conveyor Length,number,any,"m,mm,cm,in,ft",length,Length of the conveyor
+Conveyor,conveyorInclineAngle,Incline Angle,number,any,"deg,rad",angle,Incline angle of conveyor
+Conveyor,beltSpeed,Belt Speed,number,any,"m/s,mm/s,in/s,ft/s",velocity,Speed of the conveyor belt
+Conveyor,loadMass,Load Mass,number,any,"kg,g,lb,oz",mass,Mass of the load
+Conveyor,rollerDiameter,Roller Diameter,number,any,"m,mm,cm,in,ft",length,Diameter of the roller
+Conveyor,frictionCoefficient,Friction Coefficient,number,any,,,Coefficient of friction
 
-Genericrotary,genericRequiredSpeed,Required Speed,number,any,"RPM,rad/s,deg/s,Hz",The target speed for the rotary axis
-Genericrotary,genericAccelTime,Acceleration Time,number,any,s,Time taken to accelerate from rest to required speed
-Genericrotary,genericRunTime,Run Time,number,any,s,Time the rotary axis runs at required speed
-Genericrotary,genericDecelTime,Deceleration Time,number,any,s,Time taken to decelerate from required speed to rest
-Genericrotary,genericRestTime,Rest Time,number,any,s,Time the rotary axis is at rest between cycles
-Genericrotary,genericMomentOfInertia,Moment of Inertia,number,any,"kg·m²,lb·ft²,g·cm²,kg·cm²",Rotational inertia of the load and mechanism
-Genericrotary,genericFrictionTorque,Friction Torque,number,any,"Nm,lb·ft,lb·in,oz·in,kg·cm",Constant torque due to friction in the system
-Genericrotary,genericThermalMarginPercent,Thermal Margin,number,any,%,Extra margin to account for thermal effects
+Genericrotary,genericRequiredSpeed,Required Speed,number,any,"RPM,rad/s,deg/s,Hz",speed,The target speed for the rotary axis
+Genericrotary,genericAccelTime,Acceleration Time,number,any,s,,Time taken to accelerate from rest to required speed
+Genericrotary,genericRunTime,Run Time,number,any,s,,Time the rotary axis runs at required speed
+Genericrotary,genericDecelTime,Deceleration Time,number,any,s,,Time taken to decelerate from required speed to rest
+Genericrotary,genericRestTime,Rest Time,number,any,s,,Time the rotary axis is at rest between cycles
+Genericrotary,genericMomentOfInertia,Moment of Inertia,number,any,"kg·m²,lb·ft²,g·cm²,kg·cm²",inertia,Rotational inertia of the load and mechanism
+Genericrotary,genericFrictionTorque,Friction Torque,number,any,"Nm,lb·ft,lb·in,oz·in,kg·cm",torque,Constant torque due to friction in the system
+Genericrotary,genericThermalMarginPercent,Thermal Margin,number,any,%,,Extra margin to account for thermal effects
 
-Blower,blowerAirflow,Blower Airflow,number,any,"CFM,m³/s,L/s,m³/h",Blower airflow in CFM
-Blower,blowerPressure,Blower Pressure,number,any,"inH2O,Pa,kPa,bar,psi",Blower pressure in inches of water
-Blower,blowerFanEff,Blower Fan Efficiency,number,any,%,Blower fan efficiency as a percent
-Blower,blowerMotorEff,Blower Motor Efficiency,number,any,%,Blower motor efficiency as a percent
-Blower,blowerRequiredSpeed,Required Speed,number,any,"RPM,rad/s,Hz",Required blower speed (optional)
+Blower,blowerAirflow,Blower Airflow,number,any,"CFM,m³/s,L/s,m³/h",airflow,Blower airflow in CFM
+Blower,blowerPressure,Blower Pressure,number,any,"inH2O,Pa,kPa,bar,psi",blowerpressure,Blower pressure in inches of water
+Blower,blowerFanEff,Blower Fan Efficiency,number,any,%,,Blower fan efficiency as a percent
+Blower,blowerMotorEff,Blower Motor Efficiency,number,any,%,,Blower motor efficiency as a percent
+Blower,blowerRequiredSpeed,Required Speed,number,any,"RPM,rad/s,Hz",speed,Required blower speed (optional)
 

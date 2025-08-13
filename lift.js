@@ -1,43 +1,50 @@
 function findClosestLiftMotor() {
   const resultsDiv = document.getElementById("results");
-  const forceGravity = formulas.forcegravity(
-    parseFloat(document.getElementById("loadWeight").value));
-  const gearboxOutputSpeed = formulas.angularspeed(
-    parseFloat(document.getElementById("maxSpeed").value),
-    parseFloat(document.getElementById("drumDiameter").value));
-  const motorSpeed = gearboxOutputSpeed * parseFloat(document.getElementById("gearboxRatioLift").value);
-  const loadRequiredTorque = formulas.drumtorque(forceGravity,
-    parseFloat(document.getElementById("drumDiameter").value)) // Convert diameter to radius
+  
+  // Get values with proper unit conversion
+  const loadWeight = getValueWithUnit ? (getValueWithUnit("loadWeight") || parseFloat(document.getElementById("loadWeight").value)) : parseFloat(document.getElementById("loadWeight").value);
+  const maxSpeed = getValueWithUnit ? (getValueWithUnit("maxSpeed") || parseFloat(document.getElementById("maxSpeed").value)) : parseFloat(document.getElementById("maxSpeed").value);
+  const drumDiameter = getValueWithUnit ? (getValueWithUnit("drumDiameter") || parseFloat(document.getElementById("drumDiameter").value)) : parseFloat(document.getElementById("drumDiameter").value);
+  const gearboxRatioLift = parseFloat(document.getElementById("gearboxRatioLift").value);
+  const accelDecelTime = parseFloat(document.getElementById("accelDecelTime").value);
+  
+  console.log("Lift inputs (converted):", { loadWeight, maxSpeed, drumDiameter, gearboxRatioLift, accelDecelTime });
+  
+  const forceGravity = formulas.forcegravity(loadWeight);
+  const gearboxOutputSpeed = formulas.angularspeed(maxSpeed, drumDiameter);
+  const motorSpeed = gearboxOutputSpeed * gearboxRatioLift;
+  const loadRequiredTorque = formulas.drumtorque(forceGravity, drumDiameter);
   const loadRequiredPeakTorque = formulas.peakdrumtorque(
     forceGravity,
-    parseFloat(document.getElementById("drumDiameter").value),
-    parseFloat(document.getElementById("loadWeight").value),
-    formulas.peakacceleration(
-      parseFloat(document.getElementById("maxSpeed").value),
-      parseFloat(document.getElementById("accelDecelTime").value)
-    )
+    drumDiameter,
+    loadWeight,
+    formulas.peakacceleration(maxSpeed, accelDecelTime)
   );
-  const motorRequiredTorque = loadRequiredTorque / parseFloat(document.getElementById("gearboxRatioLift").value);
-  const motorRequiredPeakTorque = loadRequiredPeakTorque / parseFloat(document.getElementById("gearboxRatioLift").value);
+  const motorRequiredTorque = loadRequiredTorque / gearboxRatioLift;
+  const motorRequiredPeakTorque = loadRequiredPeakTorque / gearboxRatioLift;
   const requiredMotorPowerKw = formulas.motorpowerkw(loadRequiredTorque,gearboxOutputSpeed)
   const requiredMotorPowerHp = formulas.motorpowerhp(loadRequiredTorque,gearboxOutputSpeed)
 
-  if ((isNaN(loadRequiredTorque)) || isNaN(gearboxOutputSpeed)) {
-    resultsDiv.innerHTML = "<p>Please enter valid input numbers.</p>";
-    return;
-  }
-  resultsDiv.innerHTML = `
-    <p><strong>
-      Motor Speed: ${motorSpeed.toFixed(2)} RPM <br>
-      Motor Required Torque: ${motorRequiredTorque.toFixed(2)} Nm <br>
-      Motor Required Peak Torque: ${motorRequiredPeakTorque.toFixed(2)} Nm
-        ${addMathTooltip("T_{motor} = \\frac{T_{load}}{i_{gearbox}}")}
-      <br><br>
-      Gearbox Output Speed: ${gearboxOutputSpeed.toFixed(2)} RPM <br>
-      Gearbox Required Torque: ${loadRequiredTorque.toFixed(2)} Nm <br>
-      Gearbox Peak Torque: ${loadRequiredPeakTorque.toFixed(2)} Nm <br><br>
+  // Get selected result units from stored preferences
+  const powerUnit = window.selectedResultUnits?.power || "kW";
+  const torqueUnit = window.selectedResultUnits?.torque || "Nm";
 
-      Required Motor Power: ${requiredMotorPowerKw.toFixed(2)} kW (${requiredMotorPowerHp.toFixed(2)} HP) <br>
-    </strong></p>`;
+
+  
+  // Create outputs with unit-convertible results
+  const outputs = {
+    "Motor Speed": `${motorSpeed.toFixed(2)} RPM`,
+    "Motor Required Torque": parseFloat(convertResultValue(motorRequiredTorque, 'torque', torqueUnit).toFixed(2)),
+    "Motor Required Peak Torque": parseFloat(convertResultValue(motorRequiredPeakTorque, 'torque', torqueUnit).toFixed(2)),
+    "Motor Required Power": parseFloat(convertResultValue(requiredMotorPowerKw, 'power', powerUnit).toFixed(2)),
+    "Gearbox Output Speed": `${gearboxOutputSpeed.toFixed(2)} RPM`,
+    "Gearbox Required Torque": parseFloat(convertResultValue(loadRequiredTorque, 'torque', torqueUnit).toFixed(2)),
+    "Gearbox Required Peak Torque": parseFloat(convertResultValue(loadRequiredPeakTorque, 'torque', torqueUnit).toFixed(2)),
+  };
+  
+  displayStandardResults(outputs);
+  
   if (window.MathJax) MathJax.typeset();
 }
+
+  
